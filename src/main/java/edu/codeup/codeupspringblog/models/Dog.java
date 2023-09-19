@@ -20,5 +20,6 @@ public class Dog {
     @Column(columnDefinition = "varchar(200)", nullable = false)
     private String name;
     @Column(columnDefinition = "char(2) default 'xx'")
+    //automatically turns resideState into reside_state
     private String resideState;
 }

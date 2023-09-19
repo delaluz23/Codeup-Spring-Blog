@@ -1,44 +1,42 @@
 package edu.codeup.codeupspringblog.controllers;
+import edu.codeup.codeupspringblog.repositories.PostRepository;
 import org.springframework.ui.Model;
 import edu.codeup.codeupspringblog.models.BlogPost;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
 public class BlogPostController {
+    private final PostRepository postsDao;
 
-    private List<BlogPost> blogPostsList =  new ArrayList<>(Arrays.asList(
-            new BlogPost("A Day in the Life", "Yadda yadda yadda yaa..."),
-            new BlogPost("Another Day in the Life", "Adda yadda yadda yadda yaa..."),
-            new BlogPost("Yet Another Day in the Life", "Wadda adda yadda yadda yadda yaa...")
-    ));
-
-    @GetMapping
-    public String indexPage(Model vModel) {
-        vModel.addAttribute("blogposts", blogPostsList);
-        return "blogposts/Index";
+    public BlogPostController(PostRepository postsDao) {
+        this.postsDao = postsDao;
     }
 
-    @GetMapping("/{id}")
-    public String viewIndividualPost(@PathVariable long id, Model vModel) {
-        vModel.addAttribute("blogpost", blogPostsList.get((int) id - 1));
-        return "blogposts/Show";
+    @GetMapping("/view")
+    public String returnPosts(Model model) {
+        model.addAttribute("posts", postsDao.findAll());
+        return "blogpost/Index";
+    }
+
+    @GetMapping("")
+    public String indexPage(Model model) {
+        model.addAttribute("blogposts", postsDao.findAll());
+        return "blogpost/Index";
     }
 
     @GetMapping("/create")
-    @ResponseBody
-    public String showCreatePostView() {
-        return "view the form for creating a post";
+    public String showCreatePostView(Model model) {
+        model.addAttribute("blogpost", new BlogPost());
+        return "blogpost/create";
     }
 
     @PostMapping("/create")
-    @ResponseBody
-    public String createPost() {
-        return "create a new post";
+    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "description") String description) {
+        BlogPost blogPost = new BlogPost(title, description);
+        postsDao.save(blogPost);
+        return "redirect:/posts";
     }
 
 }
