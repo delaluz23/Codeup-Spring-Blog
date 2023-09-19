@@ -5,6 +5,7 @@
 <div id="wrapper">
     <nav th:replace="partials/partials :: nav"></nav>
     <form method="post" action="/posts/create">
+<!--        next time for form use th:action="@{/blogpost/create}" and th:method="POST"     -->
         <label for="title">Enter title</label>
         <input id="title" name="title" type="text" maxlength="255">
         <label for="description">Enter description</label>

@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/posts")
 public class BlogPostController {
+
+//    dependency injection to use an instance of this new Posts interface
     private final PostRepository postsDao;
 
     public BlogPostController(PostRepository postsDao) {
         this.postsDao = postsDao;
     }
+//
 
     @GetMapping("/view")
     public String returnPosts(Model model) {
@@ -24,6 +27,13 @@ public class BlogPostController {
     public String indexPage(Model model) {
         model.addAttribute("blogposts", postsDao.findAll());
         return "blogpost/Index";
+    }
+
+    @GetMapping("/{id}")
+    public String viewIndividualPost(@PathVariable long id, Model model){
+        BlogPost post = postsDao.findById(id).get();
+        model.addAttribute("blogpost", post);
+        return "blogpost/Show";
     }
 
     @GetMapping("/create")
