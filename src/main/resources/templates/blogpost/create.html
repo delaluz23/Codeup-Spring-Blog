@@ -4,13 +4,20 @@
 <body>
 <div id="wrapper">
     <nav th:replace="partials/partials :: nav"></nav>
-    <form method="post" action="/posts/create">
 <!--        next time for form use th:action="@{/blogpost/create}" and th:method="POST"     -->
+    <form method="post" action="/posts/create">
+<!--        this method is for using request Param-->
+<!--        <label for="title">Enter title</label>-->
+<!--        <input id="title" name="title" type="text" maxlength="255">-->
+<!--        <label for="description">Enter description</label>-->
+<!--        <input id="description" name="description" type="text" maxlength="255">-->
+<!--        <input type="hidden" name="user_id" value="1">-->
+<!--        <input type="submit" value="SUBMIT">-->
+<!--        this method is for model attribute-->
         <label for="title">Enter title</label>
-        <input id="title" name="title" type="text" maxlength="255">
+        <input id="title" th:field="*{blogpost.title}" type="text" maxlength="255">
         <label for="description">Enter description</label>
-        <input id="description" name="description" type="text" maxlength="255">
-        <input type="hidden" name="user_id" value="1">
+        <input id="description" th:field="*{blogpost.body}" type="text" maxlength="255">
         <input type="submit" value="SUBMIT">
     </form>
     <footer th:replace="partials/partials :: footer"></footer>

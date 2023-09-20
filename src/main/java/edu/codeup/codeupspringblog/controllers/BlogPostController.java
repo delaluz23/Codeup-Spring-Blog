@@ -1,4 +1,5 @@
 package edu.codeup.codeupspringblog.controllers;
+
 import edu.codeup.codeupspringblog.models.User;
 import edu.codeup.codeupspringblog.repositories.PostRepository;
 import edu.codeup.codeupspringblog.repositories.UserRepository;
@@ -11,17 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/posts")
 public class BlogPostController {
 
-//    dependency injection to use an instance of this new Posts interface
+    //    dependency injection to use an instance of this new Posts interface
     private final PostRepository postsDao;
     private final UserRepository userDao;
+
     public BlogPostController(PostRepository postsDao, UserRepository userDao) {
-        this.postsDao = postsDao; this.userDao =userDao;
+        this.postsDao = postsDao;
+        this.userDao = userDao;
     }
 //
-
-
-
-
 
 
     @GetMapping("/view")
@@ -37,10 +36,24 @@ public class BlogPostController {
     }
 
     @GetMapping("/{id}")
-    public String viewIndividualPost(@PathVariable long id, Model model){
+    public String viewIndividualPost(@PathVariable long id, Model model) {
         BlogPost post = postsDao.findById(id).get();
         model.addAttribute("blogpost", post);
         return "blogpost/Show";
+    }
+    @GetMapping("/{id}/edit")
+    public String editIndividualPostView(@PathVariable long id, Model model) {
+        BlogPost postToEdit = postsDao.findById(id).get();
+        model.addAttribute("blogpost", postToEdit);
+        return "blogpost/edit";
+    }
+    @PostMapping("/{id}/edit")
+    public String editIndividualPost(@PathVariable long id, @ModelAttribute BlogPost post) {
+        BlogPost originalPost = postsDao.findById(id).get();
+        originalPost.setTitle(post.getTitle());
+        originalPost.setBody(post.getBody());
+        postsDao.save(originalPost);
+        return "redirect:/posts";
     }
 
     @GetMapping("/create")
@@ -49,13 +62,25 @@ public class BlogPostController {
         return "blogpost/create";
     }
 
+    //using request param
+//    @PostMapping("/create")
+//    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "description") String description, @RequestParam(name = "user_id") Long userId) {
+//        BlogPost blogPost = new BlogPost(title, description, (User) userDao.findById(userId).get());
+//        postsDao.save(blogPost);
+//        return "redirect:/posts";
+//    }
+
+    //using  model attribute
     @PostMapping("/create")
-    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "description") String description, @RequestParam(name = "user_id") Long userId) {
-        BlogPost blogPost = new BlogPost(title, description, (User) userDao.findById(userId).get());
+    public String createPost(@ModelAttribute BlogPost post) {
+        BlogPost blogPost = new BlogPost(
+                post.getTitle(),
+                post.getBody(),
+                userDao.findById(1L).get()
+        );
         postsDao.save(blogPost);
         return "redirect:/posts";
     }
-
 
     //walkthrough way
 //    @PostMapping("/create")
@@ -65,4 +90,8 @@ public class BlogPostController {
 //        postsDao.save(blogPost);
 //        return "redirect:/posts";
 //    }
+
+
+
+
 }
