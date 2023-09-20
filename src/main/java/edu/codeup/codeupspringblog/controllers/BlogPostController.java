@@ -1,5 +1,7 @@
 package edu.codeup.codeupspringblog.controllers;
+import edu.codeup.codeupspringblog.models.User;
 import edu.codeup.codeupspringblog.repositories.PostRepository;
+import edu.codeup.codeupspringblog.repositories.UserRepository;
 import org.springframework.ui.Model;
 import edu.codeup.codeupspringblog.models.BlogPost;
 import org.springframework.stereotype.Controller;
@@ -11,11 +13,16 @@ public class BlogPostController {
 
 //    dependency injection to use an instance of this new Posts interface
     private final PostRepository postsDao;
-
-    public BlogPostController(PostRepository postsDao) {
-        this.postsDao = postsDao;
+    private final UserRepository userDao;
+    public BlogPostController(PostRepository postsDao, UserRepository userDao) {
+        this.postsDao = postsDao; this.userDao =userDao;
     }
 //
+
+
+
+
+
 
     @GetMapping("/view")
     public String returnPosts(Model model) {
@@ -43,8 +50,8 @@ public class BlogPostController {
     }
 
     @PostMapping("/create")
-    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "description") String description) {
-        BlogPost blogPost = new BlogPost(title, description);
+    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "description") String description, @RequestParam(name = "user_id") Long userId) {
+        BlogPost blogPost = new BlogPost(title, description, (User) userDao.findById(userId).get());
         postsDao.save(blogPost);
         return "redirect:/posts";
     }

@@ -9,6 +9,7 @@
     <article th:each="blogpost : ${blogposts}">
       <h2><a th:href="@{|/posts/${blogpost.id}|} " th:text="${blogpost.title}"></a></h2>
       <p th:text="${blogpost.body}"></p>
+      <p th:text="${blogpost.getUser().getUsername()}"></p>
     </article>
   </main>
   <footer th:replace="partials/partials :: footer"></footer>

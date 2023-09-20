@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -23,15 +25,23 @@ public class BlogPost {
     @Column(columnDefinition = "varchar(255) ", nullable = false)
     private String body;
 
-    public BlogPost(long id, String title, String body) {
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+
+    public BlogPost(long id, String title, String body, User user) {
         this.id = id;
         this.title = title;
         this.body = body;
+        this.user = user;
     }
 
-    public BlogPost(String title, String body) {
+    public BlogPost(String title, String body, User user) {
         this.title = title;
         this.body = body;
+        this.user = user;
     }
 
     public BlogPost() {
