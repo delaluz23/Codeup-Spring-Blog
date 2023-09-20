@@ -56,4 +56,13 @@ public class BlogPostController {
         return "redirect:/posts";
     }
 
+
+    //walkthrough way
+//    @PostMapping("/create")
+//    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "description") String description) {
+//        User hardCodeUser = userDao.findById(2L).get();
+//        BlogPost blogPost = new BlogPost(title, description, hardCodeUser);
+//        postsDao.save(blogPost);
+//        return "redirect:/posts";
+//    }
 }

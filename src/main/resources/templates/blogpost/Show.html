@@ -6,7 +6,7 @@
     <nav th:replace="partials/partials :: nav"></nav>
     <header th:replace="partials/partials :: header(${blogpost.title})"></header>
     <main class="container">
-        <p th:text="${blogpost.getUser().getEmail()}">
+        <p th:text="${blogpost.user.email}">
         <p th:text="${blogpost.body}"></p>
     </main>
     <footer th:replace="partials/partials :: footer"></footer>

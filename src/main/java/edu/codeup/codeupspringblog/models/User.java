@@ -18,10 +18,10 @@ public class User {
     @Column(columnDefinition = "int UNSIGNED", nullable = false)
     private long id;
 
-    @Column(columnDefinition = "varchar(255) ", nullable = false)
+    @Column(columnDefinition = "varchar(255) ", nullable = false, unique = true)
     private String username;
 
-    @Column(columnDefinition = "varchar(255) ", nullable = false)
+    @Column(columnDefinition = "varchar(255) ", nullable = false, unique = true)
     private String email;
 
     @Column(columnDefinition = "varchar(255) ", nullable = false)
