@@ -11,3 +11,5 @@ INSERT INTO blog_post (title, body, user_id) VALUES
                                                   ('Post 3 Title', 'This is the body of Post 3.', 3),
                                                   ('Post 4 Title', 'This is the body of Post 4.', 4),
                                                   ('Post 5 Title', 'This is the body of Post 5.', 5);
+drop table blog_post;
+drop table user;

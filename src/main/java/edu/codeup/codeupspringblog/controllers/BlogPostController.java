@@ -3,10 +3,14 @@ package edu.codeup.codeupspringblog.controllers;
 import edu.codeup.codeupspringblog.models.User;
 import edu.codeup.codeupspringblog.repositories.PostRepository;
 import edu.codeup.codeupspringblog.repositories.UserRepository;
+import edu.codeup.codeupspringblog.services.EmailService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import edu.codeup.codeupspringblog.models.BlogPost;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Security;
 
 @Controller
 @RequestMapping("/posts")
@@ -16,9 +20,12 @@ public class BlogPostController {
     private final PostRepository postsDao;
     private final UserRepository userDao;
 
-    public BlogPostController(PostRepository postsDao, UserRepository userDao) {
+    private final EmailService emailSvc;
+
+    public BlogPostController(PostRepository postsDao, UserRepository userDao, EmailService emailSvc) {
         this.postsDao = postsDao;
         this.userDao = userDao;
+        this.emailSvc = emailSvc;
     }
 //
 
@@ -73,12 +80,14 @@ public class BlogPostController {
     //using  model attribute
     @PostMapping("/create")
     public String createPost(@ModelAttribute BlogPost post) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         BlogPost blogPost = new BlogPost(
                 post.getTitle(),
                 post.getBody(),
-                userDao.findById(1L).get()
+                userDao.findById(user.getId()).get()
         );
         postsDao.save(blogPost);
+        emailSvc.prepareAndSend(blogPost, "hey loser", "YOU JABRONI");
         return "redirect:/posts";
     }
 
